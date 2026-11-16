@@ -1,0 +1,2718 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>ResolveAí - O Profissional Certo para Seu Problema</title>
+
+  <!-- METATAGS PWA & MOBILE -->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#FF6600">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="ResolveAí">
+  <link rel="apple-touch-icon" href="logo2.png">
+  <link rel="icon" type="image/png" href="logo2.png">
+
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF6600;
+      --primary-dark: #E05D00;
+      --secondary: #0F172A;
+      --bg: #FBFAFC;
+      --card: #FFFFFF;
+      --text: #0F172A;
+      --muted: #64748B;
+      --border: #E2E8F0;
+      --success: #10B981;
+      --input-bg: #F8FAFC;
+    }
+
+    [data-theme="dark"] {
+      --primary: #FF6600;
+      --primary-dark: #E05D00;
+      --secondary: #F8FAFC;
+      --bg: #0B172A;
+      --card: #111D33;
+      --text: #F8FAFC;
+      --muted: #94A3B8;
+      --border: #1E293B;
+      --success: #10B981;
+      --input-bg: #1A2842;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+    }
+
+    body {
+      background-color: #050a15;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: var(--text);
+    }
+
+    .phone-wrapper {
+      width: 100%;
+      max-width: 412px;
+      height: 100vh;
+      max-height: 870px;
+      background: var(--bg);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 25px 50px 12px rgba(0, 0, 0, 0.5);
+    }
+
+    @media (min-width: 480px) {
+      .phone-wrapper {
+        border-radius: 40px;
+        border: 12px solid #1e293b;
+        height: 840px;
+      }
+    }
+
+    /* ESCONDER BARRAS DE ROLAGEM */
+    .content::-webkit-scrollbar,
+    .categories-scroll::-webkit-scrollbar,
+    .auth-modal::-webkit-scrollbar {
+      display: none;
+    }
+    .content,
+    .categories-scroll,
+    .auth-modal {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+    }
+
+    /* ANIMAÇÕES */
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes splashOut {
+      from { opacity: 1; transform: scale(1); }
+      to { opacity: 0; transform: scale(1.05); visibility: hidden; }
+    }
+    @keyframes toastFade {
+      0% { opacity: 0; transform: translate(-50%, -20px); }
+      10% { opacity: 1; transform: translate(-50%, 0); }
+      90% { opacity: 1; transform: translate(-50%, 0); }
+      100% { opacity: 0; transform: translate(-50%, -20px); }
+    }
+
+    /* 1. TELA DE INICIALIZAÇÃO */
+    .splash-screen {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #0b172a;
+      z-index: 100;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: 60px 24px 40px 24px;
+      text-align: center;
+      transition: all 0.5s ease;
+    }
+
+    .splash-screen.hide {
+      animation: splashOut 0.5s forwards;
+    }
+
+    .splash-logo {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+    }
+
+    .brand-img-full {
+      width: 100%; 
+      max-width: 380px; 
+      height: auto;
+      object-fit: contain;
+      image-rendering: high-quality;
+      filter: drop-shadow(0px 8px 16px rgba(0, 0, 0, 0.4));
+    }
+
+    .splash-actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .btn-main {
+      width: 100%;
+      padding: 14px;
+      border-radius: 30px;
+      border: none;
+      background: linear-gradient(135deg, #FF8C00, #E05D00);
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 14px rgba(255, 140, 0, 0.4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-main:active { transform: scale(0.98); }
+
+    .btn-outline-splash {
+      width: 100%;
+      padding: 14px;
+      border-radius: 30px;
+      border: 2px solid #FF8C00;
+      background: transparent;
+      color: white;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    
+    .btn-danger-outline {
+      border-color: #EF4444;
+      color: #EF4444;
+    }
+
+    /* BANNER PWA DE INSTALAÇÃO NO NAVEGADOR */
+    .pwa-install-banner {
+      background: linear-gradient(135deg, #0F172A, #1E293B);
+      border: 1px solid var(--border);
+      color: white;
+      border-radius: 14px;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+
+    .pwa-install-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      text-align: left;
+    }
+
+    .pwa-install-info i {
+      font-size: 20px;
+      color: var(--primary);
+    }
+
+    .pwa-btn-install {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    /* TOAST */
+    .toast {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #10B981;
+      color: white;
+      padding: 12px 20px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+    .toast.show { display: flex; animation: toastFade 3s ease forwards; }
+    .toast.error { background: #EF4444; }
+
+    /* MODAIS GERAIS */
+    .auth-modal {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg);
+      z-index: 105;
+      display: none;
+      flex-direction: column;
+      padding: 24px 24px 60px 24px; 
+      color: var(--text);
+      overflow-y: auto;
+    }
+    
+    .auth-modal.show {
+      display: flex;
+      animation: slideUp 0.3s ease-out forwards;
+    }
+
+    /* CABEÇALHO CORRIGIDO SEM SOBREPOSIÇÃO */
+    .auth-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .btn-back {
+      background: transparent;
+      border: none;
+      color: var(--primary);
+      font-size: 14px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      padding: 6px 8px 6px 0;
+      flex-shrink: 0;
+    }
+
+    .auth-header h2 {
+      font-size: 17px;
+      margin: 0;
+      color: var(--text);
+      font-weight: 700;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .input-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 12px;
+      text-align: left;
+    }
+
+    .input-group label {
+      font-size: 12px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .input-group input,
+    .input-group select,
+    .input-group textarea {
+      padding: 10px 12px; 
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    
+    /* PERFIL */
+    .profile-header-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .profile-avatar-wrapper {
+      position: relative;
+      width: 90px;
+      height: 90px;
+      margin-bottom: 10px;
+    }
+
+    .profile-avatar-wrapper img {
+      width: 100%; height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid var(--primary);
+      background: var(--input-bg);
+    }
+
+    .btn-edit-avatar {
+      position: absolute;
+      bottom: 0; right: 0;
+      background: var(--primary);
+      color: white;
+      border: none;
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    
+    .profile-section-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text);
+      margin: 16px 0 12px 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 6px;
+    }
+
+    /* CARD DE STATUS DA ASSINATURA NO PERFIL */
+    .pro-status-badge-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .pro-status-info {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      text-align: left;
+    }
+
+    /* SEÇÃO DE EDIÇÃO DO PERFIL PRO DENTRO DE "CONTA" */
+    .pro-management-box {
+      background: var(--card);
+      border: 1.5px solid var(--primary);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 18px;
+    }
+
+    /* CAIXA DE ASSINATURA / PLANO PRO OBRIGATÓRIO */
+    .pro-pricing-box {
+      background: var(--card);
+      border: 1.5px solid var(--primary);
+      border-radius: 16px;
+      padding: 14px 16px;
+      margin-top: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 14px rgba(255, 102, 0, 0.08);
+    }
+
+    .pro-pricing-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .pro-pricing-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* SELEÇÃO DE PLANO (MENSAL OU ANUAL) */
+    .plan-period-selector {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .plan-period-card {
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 8px;
+      text-align: center;
+      cursor: pointer;
+      background: var(--input-bg);
+      transition: all 0.2s;
+    }
+
+    .plan-period-card.active {
+      border-color: var(--primary);
+      background: rgba(255, 102, 0, 0.08);
+    }
+
+    .plan-period-card .period-name {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 2px;
+    }
+
+    .plan-period-card.active .period-name {
+      color: var(--primary);
+    }
+
+    .plan-period-card .period-price {
+      font-size: 15px;
+      font-weight: 900;
+      color: var(--text);
+    }
+
+    .plan-period-card .period-badge {
+      font-size: 9px;
+      font-weight: 800;
+      background: var(--success);
+      color: white;
+      padding: 1px 6px;
+      border-radius: 10px;
+      display: inline-block;
+      margin-top: 2px;
+    }
+
+    .pro-benefits-list {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 14px 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .pro-benefits-list li {
+      font-size: 12px;
+      color: var(--muted);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .pro-benefits-list li i {
+      color: var(--success);
+      font-size: 12px;
+    }
+
+    .payment-methods-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .pay-method-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      cursor: pointer;
+      background: var(--input-bg);
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--text);
+      transition: all 0.2s;
+    }
+
+    .pay-method-card.selected {
+      border-color: var(--primary);
+      background: rgba(255, 102, 0, 0.08);
+      color: var(--primary);
+    }
+
+    .pay-method-card i {
+      font-size: 16px;
+    }
+
+    /* MODAL DE CHECKOUT PIX */
+    .pix-checkout-modal {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg);
+      z-index: 120;
+      display: none;
+      flex-direction: column;
+      padding: 24px 20px 40px 20px;
+      color: var(--text);
+      overflow-y: auto;
+      text-align: center;
+    }
+
+    .pix-checkout-modal.show {
+      display: flex;
+      animation: slideUp 0.3s ease-out forwards;
+    }
+
+    .pix-qr-container {
+      background: white;
+      padding: 16px;
+      border-radius: 16px;
+      width: 170px;
+      height: 170px;
+      margin: 14px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      border: 1px solid var(--border);
+    }
+
+    .pix-code-box {
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 10px 12px;
+      font-size: 11px;
+      color: var(--muted);
+      word-break: break-all;
+      margin: 12px 0 16px 0;
+      text-align: left;
+      font-family: monospace;
+    }
+
+    /* SWITCH MODO ESCURO */
+    .theme-switch-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--input-bg);
+      padding: 12px 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-bottom: 14px;
+    }
+    
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 46px;
+      height: 24px;
+    }
+    .switch input { opacity: 0; width: 0; height: 0; }
+    .slider {
+      position: absolute; cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #cbd5e1;
+      transition: .3s;
+      border-radius: 24px;
+    }
+    .slider:before {
+      position: absolute; content: "";
+      height: 18px; width: 18px;
+      left: 3px; bottom: 3px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider { background-color: var(--primary); }
+    input:checked + .slider:before { transform: translateX(22px); }
+
+    /* HEADER PRINCIPAL */
+    header {
+      background: var(--card);
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0; z-index: 10;
+    }
+
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-logo { height: 30px; width: auto; object-fit: contain; }
+
+    .header-actions { display: flex; align-items: center; gap: 8px; }
+
+    .location {
+      font-size: 12px; font-weight: 600;
+      color: var(--text);
+      display: flex; align-items: center; gap: 4px;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 8px;
+      background: var(--input-bg);
+      border: 1px solid var(--border);
+    }
+
+    .btn-gps {
+      background: transparent; border: none;
+      color: var(--primary); font-size: 16px;
+      cursor: pointer; padding: 6px; border-radius: 6px;
+    }
+
+    .search-box { position: relative; }
+    .search-box input {
+      width: 100%;
+      padding: 12px 16px 12px 42px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 13px;
+      outline: none;
+    }
+    .search-box i {
+      position: absolute; left: 16px; top: 50%;
+      transform: translateY(-50%);
+      color: var(--muted);
+    }
+
+    .content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+      padding-bottom: 100px; 
+    }
+
+    .user-welcome {
+      background: var(--input-bg);
+      padding: 12px 16px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      font-size: 14px; font-weight: 700;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    /* CATEGORIAS */
+    .section-title {
+      font-size: 16px; font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--text);
+    }
+
+    .categories-scroll {
+      display: flex; gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 20px;
+    }
+
+    .cat-chip {
+      display: flex; align-items: center; gap: 6px;
+      padding: 8px 14px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      white-space: nowrap;
+      font-size: 12px; font-weight: 600;
+      cursor: pointer;
+      color: var(--muted);
+    }
+    .cat-chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* BANNER */
+    .promo-banner {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      border-radius: 16px; padding: 16px;
+      margin-bottom: 20px;
+      display: flex; justify-content: space-between; align-items: center;
+      box-shadow: 0 4px 12px rgba(255,102,0,0.2);
+    }
+    .promo-banner h3 { font-size: 16px; margin-bottom: 4px; }
+    .promo-banner p { font-size: 12px; opacity: 0.9; }
+    .promo-banner button {
+      background: white; color: var(--primary);
+      border: none; padding: 8px 14px; border-radius: 8px;
+      font-weight: 700; font-size: 13px; cursor: pointer;
+    }
+
+    /* LISTA DE PRESTADORES EXCLUSIVA DE PROFISSIONAIS VERIFICADOS */
+    .providers-list { display: flex; flex-direction: column; gap: 16px; }
+    
+    .empty-state {
+      display: none; flex-direction: column;
+      align-items: center; justify-content: center;
+      padding: 40px 20px; text-align: center; color: var(--muted);
+    }
+    .empty-state i { font-size: 40px; margin-bottom: 12px; color: var(--muted); }
+    .empty-state h4 { font-size: 16px; color: var(--text); margin-bottom: 6px; }
+
+    .provider-card {
+      background: var(--card);
+      border-radius: 16px; padding: 16px;
+      border: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 12px;
+      position: relative;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.03);
+    }
+
+    .badge-verified {
+      background: rgba(255, 184, 0, 0.15);
+      color: #E6A100;
+      border: 1px solid rgba(230, 161, 0, 0.35);
+      padding: 2px 8px; border-radius: 6px;
+      font-size: 10px; font-weight: 800;
+      margin-left: 6px;
+      display: inline-flex; align-items: center; gap: 4px;
+    }
+    
+    .badge-top-rated {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: #FEF3C7;
+      color: #D97706;
+      font-size: 9px;
+      font-weight: 800;
+      padding: 2px 6px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 3px;
+    }
+    [data-theme="dark"] .badge-top-rated {
+      background: rgba(245, 158, 11, 0.2);
+      color: #FBBF24;
+    }
+    
+    .btn-fav {
+      position: absolute; top: 16px; right: 16px;
+      background: transparent; border: none; font-size: 18px;
+      color: var(--muted); cursor: pointer;
+    }
+    .btn-fav.active { color: #EF4444; }
+
+    .provider-card-top { display: flex; gap: 14px; }
+    .provider-avatar { width: 70px; height: 70px; border-radius: 12px; object-fit: cover; cursor: pointer; }
+    .provider-info { flex: 1; padding-right: 24px; }
+    .provider-name { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; cursor: pointer; }
+    .provider-category { font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+    .rating { color: #FFB800; font-size: 12px; font-weight: 700; display: flex; align-items: center; gap: 4px; }
+
+    .actions { display: flex; gap: 10px; margin-top: 4px; }
+    .btn-action { flex: 1; padding: 10px; border-radius: 10px; border: none; font-size: 13px; font-weight: 600; cursor: pointer; text-align: center; }
+    .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--text); }
+    .btn-zap { 
+      background: linear-gradient(135deg, #25D366, #128C7E); 
+      color: white; 
+      box-shadow: 0 3px 10px rgba(37, 211, 102, 0.25);
+    }
+
+    /* BIOMETRIA SIMULADA */
+    .biometric-divider {
+      display: flex;
+      align-items: center;
+      text-align: center;
+      margin: 18px 0 14px 0;
+      color: var(--muted);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .biometric-divider::before, .biometric-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid var(--border);
+    }
+    .biometric-divider:not(:empty)::before { margin-right: 10px; }
+    .biometric-divider:not(:empty)::after { margin-left: 10px; }
+
+    .btn-biometric {
+      width: 100%;
+      padding: 12px;
+      border-radius: 12px;
+      border: 1.5px dashed var(--primary);
+      background: rgba(255, 102, 0, 0.06);
+      color: var(--text);
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.2s ease;
+    }
+    .btn-biometric:hover {
+      background: rgba(255, 102, 0, 0.12);
+    }
+    .btn-biometric i {
+      font-size: 18px;
+      color: var(--primary);
+    }
+
+    /* MODAL POPUP DE LEITURA BIOMÉTRICA */
+    .biometric-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(11, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .biometric-overlay.show {
+      display: flex;
+      animation: fadeIn 0.25s ease forwards;
+    }
+
+    .biometric-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px 20px;
+      width: 100%;
+      max-width: 300px;
+      text-align: center;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .biometric-icon-wrapper {
+      width: 76px;
+      height: 76px;
+      border-radius: 50%;
+      background: rgba(255, 102, 0, 0.1);
+      border: 2px solid var(--primary);
+      margin: 0 auto 16px auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      color: var(--primary);
+      position: relative;
+    }
+
+    .biometric-icon-wrapper.scanning {
+      animation: biometricPulse 1.2s infinite ease-in-out;
+    }
+
+    .biometric-icon-wrapper.success {
+      background: #ECFDF5;
+      border-color: var(--success);
+      color: var(--success);
+      animation: none;
+    }
+
+    @keyframes biometricPulse {
+      0% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0.4); }
+      70% { box-shadow: 0 0 0 16px rgba(255, 102, 0, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 102, 0, 0); }
+    }
+
+    /* PROGRAMA DE INDICAÇÃO / AFILIADOS */
+    .referral-card {
+      background: linear-gradient(135deg, rgba(255, 102, 0, 0.1), rgba(255, 184, 0, 0.08));
+      border: 1.5px dashed var(--primary);
+      border-radius: 16px;
+      padding: 14px;
+      margin-bottom: 18px;
+      text-align: left;
+    }
+    .referral-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 6px;
+    }
+    .referral-desc {
+      font-size: 11px;
+      color: var(--muted);
+      line-height: 1.4;
+      margin-bottom: 10px;
+    }
+    .referral-code-box {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+    }
+    .referral-code-text {
+      font-family: monospace;
+      font-size: 14px;
+      font-weight: 900;
+      color: var(--text);
+      letter-spacing: 1px;
+    }
+    .btn-copy-ref {
+      background: rgba(255, 102, 0, 0.12);
+      color: var(--primary);
+      border: none;
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .referral-stats-row {
+      display: flex;
+      justify-content: space-between;
+      background: var(--card);
+      border-radius: 10px;
+      padding: 8px 12px;
+      margin-bottom: 10px;
+      border: 1px solid var(--border);
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .coupon-box {
+      margin-top: 10px;
+      margin-bottom: 12px;
+      padding-top: 10px;
+      border-top: 1px dashed var(--border);
+    }
+    .coupon-input-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .coupon-input-row input {
+      flex: 1;
+      padding: 8px 10px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 12px;
+      text-transform: uppercase;
+      font-family: monospace;
+      font-weight: 700;
+      outline: none;
+    }
+    .btn-apply-coupon {
+      background: var(--secondary);
+      color: var(--bg);
+      border: none;
+      padding: 0 14px;
+      border-radius: 8px;
+      font-size: 11px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .attendances-pill {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      margin-left: 8px;
+    }
+
+    /* BOTTOM NAV */
+    .bottom-nav {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      display: flex; justify-content: space-around;
+      padding: 12px 0;
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 4px;
+      font-size: 10px; color: var(--muted); cursor: pointer;
+    }
+    .nav-item.active { color: var(--primary); font-weight: 700; }
+    .nav-item i { font-size: 18px; }
+
+    /* MODAL DETALHES + AVALIAÇÕES */
+    .pro-details-modal {
+      position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg);
+      z-index: 110; display: none; flex-direction: column; overflow-y: auto;
+      color: var(--text);
+    }
+    .pro-details-modal.show { display: flex; animation: slideUp 0.3s ease-out forwards; }
+    
+    .pro-cover { height: 140px; background: linear-gradient(135deg, #1e293b, #0f172a); position: relative; }
+    .btn-back-details {
+      position: absolute; top: 20px; left: 20px;
+      background: rgba(255,255,255,0.2); backdrop-filter: blur(5px);
+      border: none; width: 36px; height: 36px; border-radius: 50%;
+      color: white; display: flex; align-items: center; justify-content: center; cursor: pointer;
+    }
+    
+    .pro-header-info { padding: 0 20px; position: relative; margin-top: -45px; }
+    .pro-avatar-large { width: 90px; height: 90px; border-radius: 20px; border: 4px solid var(--bg); object-fit: cover; background: var(--card); }
+    .pro-name-large { font-size: 20px; font-weight: 800; color: var(--text); margin-top: 10px; }
+    .pro-cat-large { font-size: 13px; color: var(--muted); margin-top: 4px; display: flex; align-items: center; gap: 6px; }
+    
+    .stats-row { display: flex; gap: 20px; margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border); }
+    .stat-item { display: flex; flex-direction: column; gap: 4px; }
+    .stat-val { font-weight: 800; font-size: 15px; color: var(--text); display: flex; align-items: center; gap: 4px; }
+    .stat-label { font-size: 11px; color: var(--muted); }
+    
+    .about-section { margin-top: 20px; }
+    .about-title { font-size: 15px; font-weight: 700; margin-bottom: 8px; color: var(--text); }
+    .about-text { font-size: 13px; color: var(--muted); line-height: 1.5; }
+    
+    /* AVALIAÇÕES (REVIEWS) */
+    .reviews-section { margin-top: 24px; padding-bottom: 90px; }
+    .review-card {
+      background: var(--card); border: 1px solid var(--border);
+      padding: 12px; border-radius: 12px; margin-bottom: 10px;
+    }
+    .review-header { display: flex; justify-content: space-between; font-size: 12px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+    .review-stars { color: #FFB800; font-size: 11px; }
+    .review-text { font-size: 12px; color: var(--muted); line-height: 1.4; }
+
+    .review-input-box {
+      margin-top: 14px; background: var(--card); border: 1px solid var(--border);
+      padding: 12px; border-radius: 12px;
+    }
+    .star-rating-picker { display: flex; gap: 6px; font-size: 18px; color: #CBD5E1; cursor: pointer; margin-bottom: 8px; }
+    .star-rating-picker i.selected { color: #FFB800; }
+
+    .pro-details-footer {
+      position: absolute; bottom: 0; left: 0; right: 0;
+      padding: 16px 20px; background: var(--card); border-top: 1px solid var(--border);
+      display: flex; gap: 12px; z-index: 10;
+    }
+  </style>
+</head>
+<body data-theme="light">
+  <div class="phone-wrapper">
+      
+    <!-- TOAST -->
+    <div id="toast" class="toast">
+        <i class="fa-solid fa-circle-check"></i>
+        <span id="toastMsg">Mensagem!</span>
+    </div>
+
+    <!-- 1. SPLASH -->
+    <div class="splash-screen" id="splashScreen">
+      <div class="splash-logo">
+        <img src="logo2.png" alt="Logotipo ResolveAí" class="brand-img-full" onerror="this.style.display='none';">
+      </div>
+      <div class="splash-actions">
+        <button class="btn-main" onclick="openAuth('login')">ENTRAR</button>
+        <button class="btn-outline-splash" onclick="openAuth('register')">CADASTRAR-SE</button>
+      </div>
+    </div>
+
+    <!-- 2. AUTH MODAL -->
+    <div class="auth-modal" id="authModal">
+      <div class="auth-header">
+        <button type="button" class="btn-back" onclick="closeAuth()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+        <h2 id="authTitle">Acessar Conta</h2>
+      </div>
+      <form id="authForm" onsubmit="handleAuth(event)">
+        <div id="registerExtraFields" style="display: none;">
+          <div class="input-group">
+            <label>Nome Completo</label>
+            <input type="text" id="userName" placeholder="Seu nome completo">
+          </div>
+          <div class="input-group">
+            <label>Telefone</label>
+            <input type="tel" id="userPhoneReg" placeholder="(00) 00000-0000" oninput="maskPhone(this)">
+          </div>
+          <div class="input-group">
+            <label>CEP</label>
+            <input type="text" id="userCep" placeholder="00000-000" onblur="buscarCEP(this.value, 'userStreet', 'userNeighborhood', 'userCity')" oninput="maskCEP(this)">
+          </div>
+          <div class="row-2">
+            <div class="input-group">
+              <label>Endereço</label>
+              <input type="text" id="userStreet" placeholder="Rua...">
+            </div>
+            <div class="input-group">
+              <label>Número</label>
+              <input type="text" id="userNumber" placeholder="123">
+            </div>
+          </div>
+          <div class="row-2">
+            <div class="input-group">
+              <label>Bairro</label>
+              <input type="text" id="userNeighborhood" placeholder="Centro">
+            </div>
+            <div class="input-group">
+              <label>Cidade / UF</label>
+              <input type="text" id="userCity" placeholder="Cidade - UF">
+            </div>
+          </div>
+        </div>
+        <div class="input-group">
+          <label id="loginEmailLabel">E-mail ou Telefone</label>
+          <input type="text" id="userEmail" required placeholder="exemplo@email.com">
+        </div>
+        <div class="input-group">
+          <label>Senha</label>
+          <input type="password" id="userPass" required placeholder="••••••••">
+        </div>
+        <button type="submit" class="btn-main" style="margin-top: 12px;" id="authSubmitBtn">Entrar</button>
+        
+        <!-- OPÇÃO DE BIOMETRIA ENCENADA (LOGIN FÁCIL) -->
+        <div id="biometricLoginContainer">
+          <div class="biometric-divider">ou acesse com</div>
+          <button type="button" class="btn-biometric" onclick="startBiometricLogin()">
+            <i class="fa-solid fa-fingerprint"></i> Entrar com Biometria / Face ID
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- MODAL DE LEITURA BIOMÉTRICA (ENCENAÇÃO NATIVA) -->
+    <div class="biometric-overlay" id="biometricOverlay">
+      <div class="biometric-card">
+        <div class="biometric-icon-wrapper scanning" id="bioIconWrapper">
+          <i class="fa-solid fa-fingerprint" id="bioIcon"></i>
+        </div>
+        <h3 style="font-size: 16px; font-weight: 800; margin-bottom: 6px; color: var(--text);" id="bioTitle">Verificando Biometria</h3>
+        <p style="font-size: 12px; color: var(--muted); margin-bottom: 18px;" id="bioDesc">Posicione o dedo no sensor ou olhe para a câmera (Face ID)</p>
+        <button type="button" class="btn-action btn-outline" style="width: 100%; font-size: 12px;" onclick="cancelBiometric()">Cancelar</button>
+      </div>
+    </div>
+
+    <!-- 3. PERFIL COM GERENCIAMENTO DE PERFIL PRO ASSOCIADO + PROGRAMA DE INDICAÇÃO -->
+    <div class="auth-modal" id="profileModal">
+      <div class="auth-header">
+        <button type="button" class="btn-back" onclick="closeProfileModal()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+        <h2>Meu Perfil</h2>
+      </div>
+      
+      <div class="profile-header-container">
+        <div class="profile-avatar-wrapper">
+          <img src="https://ui-avatars.com/api/?name=User&background=0F172A&color=fff" id="profileAvatarImg" alt="Foto">
+          <button class="btn-edit-avatar" onclick="document.getElementById('avatarInput').click()">
+            <i class="fa-solid fa-camera"></i>
+          </button>
+          <input type="file" id="avatarInput" style="display:none" accept="image/*" onchange="compressAndUpload(event, 'profileAvatarImg')">
+        </div>
+      </div>
+
+      <!-- CARD DINÂMICO DE STATUS DO PLANO PRÓ -->
+      <div class="pro-status-badge-card" id="userProStatusCard" style="display:none;">
+        <div class="pro-status-info">
+          <div style="font-size:13px; font-weight:800; color:var(--text); display:flex; align-items:center; gap:5px;">
+            <i class="fa-solid fa-crown" style="color:#FFB800;"></i> Assinatura Pró Ativa
+          </div>
+          <span style="font-size:11px; color:var(--success); font-weight:700;" id="userProStatusExpiry">Plano Ativo • Verificado</span>
+        </div>
+        <button type="button" class="btn-action btn-outline" style="flex:0; padding:6px 12px; font-size:11px;" onclick="openProModal()">Renovar</button>
+      </div>
+
+      <!-- PROGRAMA DE INDICAÇÃO / AFILIADOS (GANHE 30 DIAS GRÁTIS) -->
+      <div class="referral-card" id="referralProgramCard">
+        <div class="referral-header">
+          <i class="fa-solid fa-gift"></i> Indique um Colega e Ganhe 1 Mês Grátis!
+        </div>
+        <div class="referral-desc">
+          Compartilhe seu código com outros profissionais. Seu colega ganha <b>10% de desconto</b> na assinatura e você ganha <b>+30 dias grátis</b> no seu plano!
+        </div>
+        <div class="referral-code-box">
+          <span class="referral-code-text" id="myReferralCodeText">RESOLVE-PRO10</span>
+          <button type="button" class="btn-copy-ref" id="btnCopyRefCode" onclick="copyMyReferralCode()">
+            <i class="fa-regular fa-copy"></i> Copiar
+          </button>
+        </div>
+        <div class="referral-stats-row">
+          <span><i class="fa-solid fa-user-check" style="color:var(--primary);"></i> Indicados: <b id="refCountText">0</b></span>
+          <span><i class="fa-solid fa-calendar-plus" style="color:var(--success);"></i> Bônus: <b id="refBonusDaysText">+0 dias</b></span>
+        </div>
+        <button type="button" class="btn-action btn-zap" style="width:100%; padding:9px; font-size:12px; display:flex; align-items:center; justify-content:center; gap:6px;" onclick="shareReferralOnWhatsApp()">
+          <i class="fa-brands fa-whatsapp" style="font-size:15px;"></i> Convidar Colegas pelo WhatsApp
+        </button>
+      </div>
+
+      <form onsubmit="saveProfile(event)">
+        <!-- ÁREA EXCLUSIVA DE EDIÇÃO DIRETA DO NEGÓCIO PRO (QUANDO O USUÁRIO FOR PRO) -->
+        <div id="proAccountSection" style="display:none;" class="pro-management-box">
+          <div style="font-size:13px; font-weight:800; color:var(--primary); margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+            <i class="fa-solid fa-briefcase"></i> Meu Perfil de Prestador no App
+          </div>
+          
+          <div class="input-group">
+            <label>Nome do Negócio Comercial</label>
+            <input type="text" id="accProBusinessName" placeholder="Ex: João Eletricista e Instalações">
+          </div>
+          
+          <div class="row-2">
+            <div class="input-group">
+              <label>WhatsApp Comercial</label>
+              <input type="tel" id="accProWhatsapp" oninput="maskPhone(this)" placeholder="(35) 99999-9999">
+            </div>
+            <div class="input-group">
+              <label>Categoria do Serviço</label>
+              <select id="accProCategory">
+                <option value="pedreiro">Pedreiro / Reforma</option>
+                <option value="montador">Montador de Móveis</option>
+                <option value="pintor">Pintor</option>
+                <option value="frete">Fretes & Mudanças</option>
+                <option value="eletrica">Elétrica</option>
+                <option value="hidraulica">Hidráulica</option>
+                <option value="limpeza">Limpeza</option>
+                <option value="ti">Informática</option>
+                <option value="academia">Personal</option>
+                <option value="salgados">Salgados</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="input-group">
+            <label>Preço Médio / Condição</label>
+            <input type="text" id="accProPrice" placeholder="Ex: A partir de R$ 80 ou Sob Consulta">
+          </div>
+
+          <div class="input-group">
+            <label>Resumo dos Serviços & Garantia</label>
+            <textarea id="accProBio" rows="3" placeholder="Descreva os serviços prestados e diferenciais..."></textarea>
+          </div>
+        </div>
+
+        <div class="theme-switch-container">
+          <span style="font-size: 13px; font-weight: 600;"><i class="fa-solid fa-moon" style="margin-right: 6px; color: var(--primary);"></i> Modo Escuro</span>
+          <label class="switch">
+            <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode(this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="profile-section-title">Dados Pessoais</div>
+        <div class="input-group">
+          <label>Nome do Responsável</label>
+          <input type="text" id="profName" placeholder="Seu nome completo" required>
+        </div>
+        <div class="input-group">
+          <label>E-mail</label>
+          <input type="email" id="profEmail" placeholder="exemplo@email.com">
+        </div>
+        <div class="input-group">
+          <label>Telefone Pessoal</label>
+          <input type="tel" id="profPhone" oninput="maskPhone(this)" placeholder="(00) 00000-0000">
+        </div>
+
+        <div class="profile-section-title">Localização Padrão</div>
+        <div class="input-group">
+          <label>CEP</label>
+          <input type="text" id="profCep" onblur="buscarCEP(this.value, 'profStreet', 'profNeighborhood', 'profCity')" oninput="maskCEP(this)">
+        </div>
+        <div class="row-2">
+          <div class="input-group">
+            <label>Bairro</label>
+            <input type="text" id="profNeighborhood">
+          </div>
+          <div class="input-group">
+            <label>Cidade / UF</label>
+            <input type="text" id="profCity">
+          </div>
+        </div>
+        <div class="row-2" style="display:none;"><input type="text" id="profStreet"></div>
+        
+        <div class="profile-section-title">Meus Favoritos</div>
+        <div id="favListPlaceholder" style="background: var(--input-bg); padding: 12px; border-radius: 10px; border: 1px dashed var(--border); text-align: center; color: var(--muted); font-size: 12px; margin-bottom: 20px;">
+          <i class="fa-regular fa-heart" style="font-size: 20px; margin-bottom: 6px; display: block;"></i>
+          Você ainda não favoritou nenhum profissional.
+        </div>
+        <div id="favListContainer" style="display:none; flex-direction:column; gap:10px; margin-bottom:20px;"></div>
+
+        <button type="submit" class="btn-main" style="margin-bottom: 12px;" id="btnSaveProfile">Salvar Alterações</button>
+        <button type="button" class="btn-outline-splash btn-danger-outline" onclick="logout()">Sair da Conta</button>
+      </form>
+    </div>
+
+    <!-- 4. CADASTRO PRO (COM VALIDAÇÃO DE CPF REAL + COMPRESSÃO DE FOTO + CUPOM DE INDICAÇÃO) -->
+    <div class="auth-modal" id="proModal">
+      <div class="auth-header">
+        <button type="button" class="btn-back" onclick="closeProModal()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+        <h2>Cadastro de Prestador Pro</h2>
+      </div>
+      
+      <form id="proForm" onsubmit="handleProRegistration(event)">
+        <div class="profile-header-container">
+          <div class="profile-avatar-wrapper">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80" id="proAvatarImg" alt="Foto">
+            <button type="button" class="btn-edit-avatar" onclick="document.getElementById('proAvatarInput').click()">
+              <i class="fa-solid fa-camera"></i>
+            </button>
+            <input type="file" id="proAvatarInput" style="display:none" accept="image/*" onchange="compressAndUpload(event, 'proAvatarImg')">
+          </div>
+          <div style="font-size: 12px; color: var(--muted); margin-top: 6px;">Foto do Perfil ou Negócio</div>
+        </div>
+
+        <div class="input-group">
+          <label>Nome Completo do Responsável</label>
+          <input type="text" id="proFullName" required placeholder="Ex: João Silva">
+        </div>
+        <div class="row-2">
+          <div class="input-group">
+            <label>CPF (Válido)</label>
+            <input type="text" id="proCpf" required placeholder="000.000.000-00" oninput="maskCPF(this)">
+          </div>
+          <div class="input-group">
+            <label>WhatsApp Comercial</label>
+            <input type="tel" id="proWhatsapp" required placeholder="(35) 99999-9999" oninput="maskPhone(this)">
+          </div>
+        </div>
+        <div class="input-group">
+          <label>Nome do Negócio Comercial</label>
+          <input type="text" id="proBusiness" required placeholder="Ex: João Eletricista">
+        </div>
+        <div class="row-2">
+          <div class="input-group">
+            <label>Categoria</label>
+            <select id="proCategory" required>
+              <option value="pedreiro">Pedreiro / Reforma</option>
+              <option value="montador">Montador de Móveis</option>
+              <option value="pintor">Pintor</option>
+              <option value="frete">Fretes & Mudanças</option>
+              <option value="eletrica">Elétrica</option>
+              <option value="hidraulica">Hidráulica</option>
+              <option value="limpeza">Limpeza</option>
+              <option value="ti">Informática</option>
+              <option value="academia">Personal</option>
+              <option value="salgados">Salgados</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label>CEP</label>
+            <input type="text" id="proCep" required placeholder="00000-000" onblur="buscarCEP(this.value, 'tempProStr', 'proNeighborhood', 'proCity')" oninput="maskCEP(this)">
+          </div>
+        </div>
+        <div class="row-2">
+          <div class="input-group">
+            <label>Bairro</label>
+            <input type="text" id="proNeighborhood" required placeholder="Centro">
+          </div>
+          <div class="input-group">
+            <label>Cidade / UF</label>
+            <input type="text" id="proCity" required placeholder="Cidade - UF">
+          </div>
+        </div>
+        <input type="hidden" id="tempProStr">
+
+        <div class="input-group">
+          <label>Preço Médio Estimado</label>
+          <input type="text" id="proPriceInput" placeholder="Ex: A partir de R$ 80 / Sob Consulta">
+        </div>
+
+        <div class="input-group">
+          <label>Resumo dos Serviços & Garantia</label>
+          <textarea id="proBio" rows="2" required placeholder="Breve resumo dos seus serviços e diferenciais..."></textarea>
+        </div>
+
+        <!-- SEÇÃO DE ASSINATURA / SELETOR MENSAL OU ANUAL -->
+        <div class="pro-pricing-box">
+          <div class="pro-pricing-header">
+            <div class="pro-pricing-title">
+              <i class="fa-solid fa-crown" style="color: #FFB800;"></i> Escolha o Plano Pró
+            </div>
+          </div>
+
+          <div class="plan-period-selector">
+            <div class="plan-period-card active" id="planMonthlyCard" onclick="selectPlanPeriod('monthly')">
+              <div class="period-name">Mensal</div>
+              <div class="period-price">R$ 29,90<span style="font-size:10px; font-weight:600; color:var(--muted)">/mês</span></div>
+            </div>
+            <div class="plan-period-card" id="planAnnualCard" onclick="selectPlanPeriod('annual')">
+              <div class="period-name">Anual</div>
+              <div class="period-price">R$ 249,00<span style="font-size:10px; font-weight:600; color:var(--muted)">/ano</span></div>
+              <span class="period-badge">Economize 30%</span>
+            </div>
+          </div>
+
+          <ul class="pro-benefits-list">
+            <li><i class="fa-solid fa-circle-check"></i> <b>Publicação Imediata</b> no topo da cidade</li>
+            <li><i class="fa-solid fa-circle-check"></i> <b>Selo Oficial de Verificado</b> (garantia de credibilidade)</li>
+            <li><i class="fa-solid fa-circle-check"></i> <b>Botão de WhatsApp Direto</b> para pedidos de orçamento</li>
+            <li><i class="fa-solid fa-circle-check"></i> Edite foto, descrição e valores direto da aba Conta</li>
+          </ul>
+
+          <label style="font-size: 11px; font-weight: 700; color: var(--muted); margin-bottom: 6px; display: block;">Forma de Pagamento:</label>
+          <div class="payment-methods-grid">
+            <div class="pay-method-card selected" id="optPix" onclick="selectPaymentMethod('pix')">
+              <i class="fa-brands fa-pix" style="color:#32BCAD;"></i> PIX Instantâneo
+            </div>
+            <div class="pay-method-card" id="optCard" onclick="selectPaymentMethod('card')">
+              <i class="fa-regular fa-credit-card" style="color:var(--primary);"></i> Cartão
+            </div>
+          </div>
+
+          <!-- CAMPO DE CUPOM DE INDICAÇÃO -->
+          <div class="coupon-box">
+            <label style="font-size: 11px; font-weight: 700; color: var(--muted);">Foi indicado por um colega? (Ganhe 10% OFF)</label>
+            <div class="coupon-input-row">
+              <input type="text" id="referralCouponInput" placeholder="Ex: RESOLVE-JOAO">
+              <button type="button" class="btn-apply-coupon" id="btnApplyCoupon" onclick="applyReferralCoupon()">Aplicar</button>
+            </div>
+            <div id="couponFeedbackMsg" style="font-size:11px; font-weight:700; color:var(--success); margin-top:4px; display:none;">
+              <i class="fa-solid fa-circle-check"></i> Cupom aplicado! 10% de desconto ativado.
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-main" id="btnSubmitPro">
+           <i class="fa-solid fa-lock" style="font-size: 13px;"></i> <span id="btnSubmitProText">ATIVAR MEU PERFIL E COMEÇAR A RECEBER CLIENTES</span>
+        </button>
+      </form>
+    </div>
+
+    <!-- MODAL DE CHECKOUT PIX COM FEEDBACK VISUAL NO COPIAR -->
+    <div class="pix-checkout-modal" id="pixCheckoutModal">
+      <div class="auth-header" style="justify-content: flex-start;">
+        <button type="button" class="btn-back" onclick="closePixModal()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+        <h2>Pagamento do Plano Pró</h2>
+      </div>
+
+      <div style="font-size: 13px; color: var(--muted);">
+        Para ativar e publicar seu perfil com o <b>Selo Verificado</b>, conclua o pagamento PIX:
+      </div>
+
+      <div class="pix-qr-container">
+        <svg width="130" height="130" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="100" height="100" fill="white"/>
+          <path d="M10 10H40V40H10V10ZM16 16V34H34V16H16ZM22 22H28V28H22V22ZM60 10H90V40H60V10ZM66 16V34H84V16H66ZM72 22H78V28H72V22ZM10 60H40V90H10V60ZM16 66V84H34V66H16ZM22 72H28V78H22V72ZM60 60H70V70H60V60ZM80 60H90V70H80V60ZM70 70H80V80H70V70ZM60 80H70V90H60V80ZM80 80H90V90H80V80ZM46 10H54V24H46V10ZM46 30H54V44H46V30ZM10 46H24V54H10V46ZM30 46H44V54H30V46ZM46 46H54V54H46V46ZM56 46H70V54H56V46ZM76 46H90V54H76V46ZM46 60H54V74H46V60ZM46 80H54V90H46V80Z" fill="#0F172A"/>
+        </svg>
+      </div>
+
+      <div style="font-size: 20px; font-weight: 900; color: var(--primary);" id="pixModalPriceDisplay">
+        R$ 29,90 <span style="font-size:12px; font-weight:600; color:var(--muted)">/ mês</span>
+      </div>
+
+      <div class="pix-code-box" id="pixCopiaColaCode">
+        00020126580014br.gov.bcb.pix0136resolveai-financeiro-pro-2990520400005303986540529.905802BR5915RESOLVEAI PRO6012POUSO ALEGRE62070503***6304D1B8
+      </div>
+
+      <button type="button" class="btn-outline-splash" id="btnCopyPix" style="margin-bottom: 12px; font-size: 13px;" onclick="copyPixCode()">
+        <i class="fa-regular fa-copy"></i> Copiar Chave / Código PIX
+      </button>
+
+      <button type="button" class="btn-main" onclick="confirmPaymentAndFinish()">
+        <i class="fa-solid fa-circle-check"></i> JÁ REALIZEI O PAGAMENTO
+      </button>
+    </div>
+
+    <!-- MODAL LOCALIZAÇÃO -->
+    <div class="auth-modal" id="locationModal">
+      <div class="auth-header">
+        <button type="button" class="btn-back" onclick="closeLocationModal()">
+          <i class="fa-solid fa-arrow-left"></i> Voltar
+        </button>
+        <h2>Alterar Localização</h2>
+      </div>
+      <div class="input-group" style="margin-top: 20px;">
+        <label>Cidade ou Bairro</label>
+        <div style="display:flex; gap:10px;">
+            <input type="text" id="newLocationInput" placeholder="Ex: São Paulo, SP" style="flex:1;">
+            <button class="btn-gps" onclick="getLocationGPS()" title="Usar GPS"><i class="fa-solid fa-location-crosshairs"></i></button>
+        </div>
+      </div>
+      <button class="btn-main" style="margin-top: 10px;" onclick="saveNewLocation()">Confirmar</button>
+    </div>
+    
+    <!-- MODAL DETALHES + AVALIAÇÕES -->
+    <div class="pro-details-modal" id="proDetailsModal">
+        <div class="pro-cover">
+            <button class="btn-back-details" onclick="closeProDetails()">
+                <i class="fa-solid fa-arrow-left"></i>
+            </button>
+        </div>
+        <div class="pro-header-info">
+            <img src="" id="detAvatar" class="pro-avatar-large">
+            <div class="pro-name-large" id="detName">Nome</div>
+            <div class="pro-cat-large"><i class="fa-solid fa-tag" style="color:var(--primary)"></i> <span id="detCat">Cat</span> • <span id="detDist">Dist</span></div>
+            
+            <div class="stats-row" style="justify-content: space-between; gap: 10px;">
+                <div class="stat-item">
+                    <div class="stat-val"><i class="fa-solid fa-star" style="color:#FFB800"></i> <span id="detRating">5.0</span></div>
+                    <div class="stat-label">Avaliação</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val"><i class="fa-solid fa-users" style="color:var(--primary); font-size:13px;"></i> <span id="detAttendances">0</span></div>
+                    <div class="stat-label">Atendimentos</div>
+                </div>
+                <div class="stat-item" id="detVerifiedBadge">
+                    <div class="stat-val" style="color:#E6A100; font-size:13px;"><i class="fa-solid fa-shield-check"></i> Oficial</div>
+                    <div class="stat-label">Verificado</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-val" style="color:var(--success); font-size:13px;"><i class="fa-solid fa-bolt"></i> ~15m</div>
+                    <div class="stat-label">Resposta</div>
+                </div>
+            </div>
+            
+            <div class="about-section">
+                <div class="about-title">Preço Estimado</div>
+                <div class="about-text" id="detPrice" style="font-weight:700; color:var(--text); margin-bottom:12px;">Sob Consulta</div>
+                <div class="about-title">Sobre os Serviços & Garantia</div>
+                <div class="about-text" id="detBio">Bio...</div>
+            </div>
+
+            <!-- SEÇÃO DE AVALIAÇÕES DOS CLIENTES -->
+            <div class="reviews-section">
+                <div class="about-title" style="margin-bottom: 12px;">Avaliações de Clientes</div>
+                <div id="reviewsContainer"></div>
+
+                <!-- ADICIONAR AVALIAÇÃO -->
+                <div class="review-input-box">
+                    <div style="font-size: 13px; font-weight: 700; margin-bottom: 6px; color: var(--text);">Deixe a sua avaliação</div>
+                    <div class="star-rating-picker" id="starPicker">
+                        <i class="fa-solid fa-star selected" onclick="setRatingScore(1)"></i>
+                        <i class="fa-solid fa-star selected" onclick="setRatingScore(2)"></i>
+                        <i class="fa-solid fa-star selected" onclick="setRatingScore(3)"></i>
+                        <i class="fa-solid fa-star selected" onclick="setRatingScore(4)"></i>
+                        <i class="fa-solid fa-star selected" onclick="setRatingScore(5)"></i>
+                    </div>
+                    <textarea id="reviewCommentInput" rows="2" placeholder="Escreva o que achou do serviço..." style="width:100%; padding:8px; border-radius:8px; border:1px solid var(--border); background:var(--bg); color:var(--text); font-size:12px; outline:none; margin-bottom:8px;"></textarea>
+                    <button class="btn-main" style="padding: 8px; font-size: 12px;" onclick="submitReview()">Enviar Avaliação</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="pro-details-footer">
+            <button class="btn-action btn-outline" style="flex:0.3; font-size:16px;" id="detFavBtn" onclick="toggleFavFromDetails(this)">
+                <i class="fa-regular fa-heart"></i>
+            </button>
+            <button class="btn-action btn-zap" style="flex:1; font-size:13px;" id="detZapBtn">
+                <i class="fa-brands fa-whatsapp" style="margin-right:6px;"></i> Chamar no WhatsApp
+            </button>
+        </div>
+    </div>
+
+    <!-- 5. HEADER PRINCIPAL -->
+    <header>
+      <div class="top-bar">
+        <div class="brand">
+          <button onclick="logout()" style="background:none; border:none; color:var(--primary); font-size:20px; margin-right:4px; cursor:pointer;" title="Voltar">
+            <i class="fa-solid fa-arrow-left"></i>
+          </button>
+          <img src="logo2.png" alt="Logo" class="header-logo" onerror="this.style.display='none';">
+        </div>
+        <div class="header-actions">
+          <div class="location" onclick="openLocationModal()" title="Mudar Localização">
+            <i class="fa-solid fa-location-dot" style="color: var(--primary);"></i> 
+            <span id="userLocationText">Pouso Alegre, MG</span>
+            <i class="fa-solid fa-chevron-down" style="font-size: 10px; margin-left: 2px;"></i>
+          </div>
+        </div>
+      </div>
+      <div class="search-box">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="searchInput" placeholder="O que você precisa resolver hoje?" oninput="filterProviders()">
+      </div>
+    </header>
+
+    <!-- 6. DASHBOARD -->
+    <div class="content">
+      <!-- BANNER DE INSTALAÇÃO PWA -->
+      <div class="pwa-install-banner" id="pwaBanner">
+        <div class="pwa-install-info">
+          <i class="fa-solid fa-mobile-screen-button"></i>
+          <div>
+            <div style="font-weight:700;">Instalar o ResolveAí</div>
+            <div style="font-size:10px; opacity:0.8;">Acesse direto do seu celular</div>
+          </div>
+        </div>
+        <button class="pwa-btn-install" id="btnInstallPWA" onclick="triggerPWAInstall()">INSTALAR</button>
+      </div>
+
+      <div class="user-welcome" id="welcomeText">
+        Olá, Visitante!
+      </div>
+
+      <div class="section-title">Categorias</div>
+      <div class="categories-scroll" id="categoriesScroll"></div>
+
+      <div class="promo-banner">
+        <div>
+          <h3>É profissional autônomo?</h3>
+          <p>Receba pedidos de clientes no seu WhatsApp todos os dias!</p>
+        </div>
+        <button onclick="openProModal()">Anunciar</button>
+      </div>
+
+      <div class="section-title" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Profissionais Prontos para Atender</span>
+        <span style="font-size:11px; font-weight:700; color:#E6A100"><i class="fa-solid fa-shield-check"></i> 100% Verificados</span>
+      </div>
+      
+      <div class="empty-state" id="emptyState">
+         <i class="fa-solid fa-magnifying-glass-location"></i>
+         <h4>Nenhum profissional verificado encontrado</h4>
+         <p>Tente procurar por outra categoria ou termo de pesquisa na sua região.</p>
+      </div>
+
+      <div class="providers-list" id="providersList"></div>
+    </div>
+
+    <!-- 7. BARRA INFERIOR -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" onclick="activateTab(this)"><i class="fa-solid fa-house"></i><span>Início</span></div>
+      <div class="nav-item" onclick="openProModal(); activateTab(this)"><i class="fa-solid fa-briefcase"></i><span>Sou Pro</span></div>
+      <div class="nav-item" onclick="handleAccountClick(); activateTab(this)"><i class="fa-solid fa-user"></i><span>Conta</span></div>
+    </nav>
+  </div>
+
+  <script>
+    /* REGISTRO DO SERVICE WORKER (PWA) */
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(reg => console.log('Service Worker ativo no escopo:', reg.scope))
+          .catch(err => console.warn('Falha no Service Worker:', err));
+      });
+    }
+
+    /* CAPTURA DO EVENTO DE INSTALAÇÃO PWA */
+    let deferredPrompt = null;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      const banner = document.getElementById('pwaBanner');
+      if (banner) banner.style.display = 'flex';
+    });
+
+    function triggerPWAInstall() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            showToast("Aplicativo instalado com sucesso!");
+          }
+          deferredPrompt = null;
+          document.getElementById('pwaBanner').style.display = 'none';
+        });
+      } else {
+        showToast("Para instalar no iOS, toque em Compartilhar e 'Adicionar à Tela de Início'.");
+      }
+    }
+
+    function showToast(msg, isError = false) {
+        const toast = document.getElementById('toast');
+        const icon = toast.querySelector('i');
+        document.getElementById('toastMsg').innerText = msg;
+        toast.classList.remove('show', 'error');
+        if(isError) {
+            toast.classList.add('error');
+            icon.className = 'fa-solid fa-circle-exclamation';
+        } else {
+            icon.className = 'fa-solid fa-circle-check';
+        }
+        void toast.offsetWidth;
+        toast.classList.add('show');
+        setTimeout(() => { toast.classList.remove('show'); }, 3000);
+    }
+
+    const categories = [
+      { id: 'all', name: 'Todos', icon: 'fa-border-all' },
+      { id: 'pedreiro', name: 'Pedreiro & Obras', icon: 'fa-trowel' },
+      { id: 'montador', name: 'Montador de Móveis', icon: 'fa-screwdriver-wrench' },
+      { id: 'eletrica', name: 'Elétrica', icon: 'fa-bolt' },
+      { id: 'hidraulica', name: 'Hidráulica', icon: 'fa-droplet' },
+      { id: 'pintor', name: 'Pinturas', icon: 'fa-paint-roller' },
+      { id: 'frete', name: 'Fretes & Mudanças', icon: 'fa-truck' },
+      { id: 'limpeza', name: 'Limpeza', icon: 'fa-broom' },
+      { id: 'ti', name: 'Informática', icon: 'fa-computer' },
+      { id: 'salgados', name: 'Salgados & Festas', icon: 'fa-utensils' },
+      { id: 'academia', name: 'Academia & Personal', icon: 'fa-dumbbell' }
+    ];
+
+    // APENAS PROFISSIONAIS VERIFICADOS (PAGANTES) SÃO EXIBIDOS NA PLATAFORMA
+    const defaultProviders = [
+      { id: 1, name: "Dona Maria Salgados & Kits", category: "salgados", categoryLabel: "Salgados & Festas", rating: 4.9, contactsCount: 42, distance: "1.2 km", verified: true, phone: "35999000001", avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=150&q=80", price: "A partir de R$ 75 o cento", bio: "Os melhores salgados da região para sua festa. Aceitamos encomendas de kits completos.", reviews: [{author: "Carlos M.", stars: 5, text: "Salgados maravilhosos e entrega super pontual!"}] },
+      { id: 2, name: "Lucas Personal Trainer", category: "academia", categoryLabel: "Academia & Personal", rating: 5.0, contactsCount: 38, distance: "2.5 km", verified: true, phone: "35999000002", avatar: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=150&q=80", price: "Mensalidade a partir de R$ 150", bio: "Aulas personalizadas para emagrecimento e hipertrofia.", reviews: [{author: "Ana P.", stars: 5, text: "Excelente profissional, motivador e atento à postura."}] },
+      { id: 3, name: "Carlos Silva - Eletricista", category: "eletrica", categoryLabel: "Elétrica", rating: 4.8, contactsCount: 29, distance: "0.8 km", verified: true, phone: "35999000003", avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80", price: "Visita técnica a partir de R$ 70", bio: "Instalações elétricas residenciais e industriais.", reviews: [{author: "Roberto S.", stars: 5, text: "Resolveu o meu curto-circuito muito rápido."}] },
+      { id: 4, name: "Roberto Obras & Reformas", category: "pedreiro", categoryLabel: "Pedreiro & Obras", rating: 4.7, contactsCount: 8, distance: "1.5 km", verified: true, phone: "35999000004", avatar: "https://images.unsplash.com/photo-1540569014015-19a7be504e3a?auto=format&fit=crop&w=150&q=80", price: "Diária / Empreitada sob orçamento", bio: "Reformas em geral, assentamento de pisos e acabamentos.", reviews: [] },
+      { id: 5, name: "Marcos Montador", category: "montador", categoryLabel: "Montador de Móveis", rating: 4.9, contactsCount: 21, distance: "3.0 km", verified: true, phone: "35999000005", avatar: "https://images.unsplash.com/photo-1506803682981-6e718a9dd3ee?auto=format&fit=crop&w=150&q=80", price: "Montagem a partir de R$ 60", bio: "Montagem de móveis de todas as marcas com garantia.", reviews: [] },
+      { id: 6, name: "João Pinturas Especiais", category: "pintor", categoryLabel: "Pinturas", rating: 5.0, contactsCount: 34, distance: "2.1 km", verified: true, phone: "35999000006", avatar: "https://images.unsplash.com/photo-1534308143481-c55f00be8bd7?auto=format&fit=crop&w=150&q=80", price: "Orçamento sem compromisso", bio: "Pintura residencial e texturas decorativas.", reviews: [] },
+      { id: 7, name: "Fretes do Tiago", category: "frete", categoryLabel: "Fretes & Mudanças", rating: 4.6, contactsCount: 6, distance: "4.5 km", verified: true, phone: "35999000007", avatar: "https://images.unsplash.com/photo-1517070208541-6ddc4d3efbcb?auto=format&fit=crop&w=150&q=80", price: "A partir de R$ 90 na cidade", bio: "Fretes locais e pequenas mudanças.", reviews: [] },
+      { id: 8, name: "Ana Limpeza Diarista", category: "limpeza", categoryLabel: "Limpeza", rating: 4.9, contactsCount: 26, distance: "0.5 km", verified: true, phone: "35999000008", avatar: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=150&q=80", price: "Diária a partir de R$ 130", bio: "Limpeza pós-obra e diarista residencial.", reviews: [] },
+      { id: 9, name: "Beto Info e Celulares", category: "ti", categoryLabel: "Informática", rating: 4.8, contactsCount: 11, distance: "1.0 km", verified: true, phone: "35999000009", avatar: "https://images.unsplash.com/photo-1492562080023-ab3db95bfbce?auto=format&fit=crop&w=150&q=80", price: "Formatação a partir de R$ 80", bio: "Formatação de computadores e reparação de telemóveis.", reviews: [] }
+    ];
+
+    let currentCategory = 'all';
+    let userFavorites = [];
+    let providers = [];
+    let currentViewedPro = null;
+    let selectedRatingScore = 5;
+    let pendingProData = null;
+    let selectedPayMethod = 'pix';
+    let selectedPlanPeriod = 'monthly';
+    let couponApplied = false;
+    let appliedCouponCode = '';
+
+    window.onload = function() {
+      const savedProviders = JSON.parse(localStorage.getItem('resolveAi_providers')) || [];
+      const loadedReviews = JSON.parse(localStorage.getItem('resolveAi_reviews')) || {};
+      const loadedContacts = JSON.parse(localStorage.getItem('resolveAi_contacts')) || {};
+      
+      defaultProviders.forEach(p => {
+          if(loadedReviews[p.id]) {
+              p.reviews = loadedReviews[p.id];
+              calcRating(p);
+          }
+          if(loadedContacts[p.id] !== undefined) {
+              p.contactsCount = loadedContacts[p.id];
+          }
+      });
+
+      savedProviders.forEach(p => {
+          if(loadedContacts[p.id] !== undefined) {
+              p.contactsCount = loadedContacts[p.id];
+          } else if (p.contactsCount === undefined) {
+              p.contactsCount = 0;
+          }
+      });
+
+      // Apenas profissionais verificados são carregados na base ativa
+      providers = [...savedProviders, ...defaultProviders].filter(p => p.verified === true);
+
+      const savedUser = localStorage.getItem('resolveAi_user');
+      if (savedUser) {
+        const user = JSON.parse(savedUser);
+        userFavorites = user.favorites || [];
+        if(user.darkMode) {
+            toggleDarkMode(true);
+            document.getElementById('darkModeToggle').checked = true;
+        }
+        showMainApp(user.name || user.email, user.address);
+      }
+      renderCategories();
+      renderProviders();
+    };
+
+    function toggleDarkMode(isDark) {
+        if(isDark) {
+            document.body.setAttribute('data-theme', 'dark');
+        } else {
+            document.body.setAttribute('data-theme', 'light');
+        }
+        let user = JSON.parse(localStorage.getItem('resolveAi_user'));
+        if(user) {
+            user.darkMode = isDark;
+            localStorage.setItem('resolveAi_user', JSON.stringify(user));
+        }
+    }
+    
+    function activateTab(el) {
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => { item.classList.remove('active'); });
+        el.classList.add('active');
+    }
+    
+    function resetBottomNav() {
+        document.querySelectorAll('.bottom-nav .nav-item').forEach(item => { item.classList.remove('active'); });
+        document.querySelectorAll('.bottom-nav .nav-item')[0].classList.add('active');
+    }
+
+    function renderCategories() {
+      document.getElementById('categoriesScroll').innerHTML = categories.map(cat => `
+        <div class="cat-chip ${cat.id === currentCategory ? 'active' : ''}" onclick="selectCategory('${cat.id}')">
+          <i class="fa-solid ${cat.icon}"></i> ${cat.name}
+        </div>
+      `).join('');
+    }
+
+    function selectCategory(id) {
+      currentCategory = id;
+      renderCategories();
+      renderProviders();
+    }
+
+    /* REGRA JUSTA PARA O SELO "MAIS RECOMENDADO": EXIGE NOTA ALTA (>= 4.8) E VOLUME REAL DE ATENDIMENTOS (>= 15) */
+    function isTopRecommended(pro) {
+      const count = pro.contactsCount || 0;
+      return pro.rating >= 4.8 && count >= 15;
+    }
+
+    /* MENSAGEM DINÂMICA PARA O WHATSAPP + CONTADOR DE ATENDIMENTOS REAIS */
+    function openWhatsAppPro(id, phone, proName, categoryLabel) {
+      const pro = providers.find(p => p.id === id);
+      if (pro) {
+        pro.contactsCount = (pro.contactsCount || 0) + 1;
+        
+        // Persiste o volume de atendimentos no localStorage
+        const loadedContacts = JSON.parse(localStorage.getItem('resolveAi_contacts')) || {};
+        loadedContacts[id] = pro.contactsCount;
+        localStorage.setItem('resolveAi_contacts', JSON.stringify(loadedContacts));
+
+        // Atualiza caso seja um prestador cadastrado pelo usuário
+        let savedProviders = JSON.parse(localStorage.getItem('resolveAi_providers')) || [];
+        const sIdx = savedProviders.findIndex(sp => sp.id === id);
+        if (sIdx !== -1) {
+          savedProviders[sIdx].contactsCount = pro.contactsCount;
+          localStorage.setItem('resolveAi_providers', JSON.stringify(savedProviders));
+        }
+
+        // Se o modal de detalhes estiver aberto, atualiza o número na hora
+        const detAtt = document.getElementById('detAttendances');
+        if (detAtt && currentViewedPro && currentViewedPro.id === id) {
+          detAtt.innerText = `+${pro.contactsCount}`;
+        }
+        renderProviders();
+      }
+
+      const msg = encodeURIComponent(`Olá, ${proName}! Encontrei o seu perfil no ResolveAí (${categoryLabel}) e gostaria de solicitar um orçamento.`);
+      window.open(`https://wa.me/55${phone}?text=${msg}`);
+    }
+
+    function renderProviders() {
+      const search = document.getElementById('searchInput').value.toLowerCase();
+      
+      // REGRA DE OURO: Apenas prestadores verificados (pagantes) aparecem na busca
+      let filtered = providers.filter(p => {
+        const isVerified = p.verified === true;
+        const matchesCat = currentCategory === 'all' || p.category === currentCategory;
+        const matchesSearch = p.name.toLowerCase().includes(search) || p.categoryLabel.toLowerCase().includes(search);
+        return isVerified && matchesCat && matchesSearch;
+      });
+
+      // Ordena priorizando quem é Mais Recomendado (volume + nota) e depois por volume de atendimentos e avaliação
+      filtered.sort((a, b) => {
+        const topA = isTopRecommended(a) ? 1 : 0;
+        const topB = isTopRecommended(b) ? 1 : 0;
+        if (topB !== topA) return topB - topA;
+        if ((b.contactsCount || 0) !== (a.contactsCount || 0)) return (b.contactsCount || 0) - (a.contactsCount || 0);
+        return b.rating - a.rating;
+      });
+      
+      const listEl = document.getElementById('providersList');
+      const emptyEl = document.getElementById('emptyState');
+      
+      if (filtered.length === 0) {
+          listEl.innerHTML = "";
+          emptyEl.style.display = "flex";
+      } else {
+          emptyEl.style.display = "none";
+          listEl.innerHTML = filtered.map(p => {
+            const topRec = isTopRecommended(p);
+            const attCount = p.contactsCount || 0;
+            return `
+            <div class="provider-card">
+              ${topRec ? '<span class="badge-top-rated"><i class="fa-solid fa-fire"></i> Mais Recomendado</span>' : ''}
+              <button class="btn-fav ${userFavorites.includes(p.id) ? 'active' : ''}" onclick="toggleFavorite(${p.id}, this, event)">
+                 <i class="${userFavorites.includes(p.id) ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
+              </button>
+              <div class="provider-card-top" style="${topRec ? 'margin-top: 14px;' : ''}" onclick="openProDetails(${p.id})">
+                <img src="${p.avatar}" class="provider-avatar">
+                <div class="provider-info">
+                  <div class="provider-name">
+                    ${p.name}
+                    <span class="badge-verified"><i class="fa-solid fa-shield-check"></i> Verificado</span>
+                  </div>
+                  <div class="provider-category">${p.categoryLabel} • ${p.distance}</div>
+                  <div class="rating">
+                    <i class="fa-solid fa-star"></i> ${p.rating.toFixed(1)}
+                    <span class="attendances-pill"><i class="fa-solid fa-users"></i> +${attCount} atendimentos</span>
+                  </div>
+                </div>
+              </div>
+              <div class="actions">
+                <button class="btn-action btn-outline" onclick="openProDetails(${p.id})">Ver Perfil</button>
+                <button class="btn-action btn-zap" onclick="openWhatsAppPro(${p.id}, '${p.phone}', '${p.name}', '${p.categoryLabel}')">WhatsApp</button>
+              </div>
+            </div>
+          `}).join('');
+      }
+    }
+
+    function filterProviders() { renderProviders(); }
+
+    function toggleFavorite(id, btnElement, event) {
+        if(event) event.stopPropagation();
+        if(!localStorage.getItem('resolveAi_user')){
+            showToast("Faça login para salvar favoritos", true);
+            openAuth('login');
+            return;
+        }
+        
+        const index = userFavorites.indexOf(id);
+        const icon = btnElement.querySelector('i');
+        
+        if (index > -1) {
+            userFavorites.splice(index, 1);
+            btnElement.classList.remove('active');
+            icon.classList.remove('fa-solid'); icon.classList.add('fa-regular');
+            showToast("Removido dos favoritos");
+        } else {
+            userFavorites.push(id);
+            btnElement.classList.add('active');
+            icon.classList.remove('fa-regular'); icon.classList.add('fa-solid');
+            showToast("Adicionado aos favoritos!");
+        }
+        
+        let user = JSON.parse(localStorage.getItem('resolveAi_user'));
+        user.favorites = userFavorites;
+        localStorage.setItem('resolveAi_user', JSON.stringify(user));
+        updateProfileFavList();
+    }
+
+    function maskCEP(i) {
+      let v = i.value.replace(/\D/g, '');
+      if (v.length > 8) v = v.slice(0, 8);
+      v = v.replace(/(\d{5})(\d)/, '$1-$2');
+      i.value = v;
+    }
+
+    async function buscarCEP(cep, streetId, neighborhoodId, cityId) {
+      const cleanCep = cep.replace(/\D/g, '');
+      if (cleanCep.length === 8) {
+        try {
+          const res = await fetch(`https://viacep.com.br/ws/${cleanCep}/json/`);
+          const data = await res.json();
+          if (!data.erro) {
+            if(document.getElementById(streetId)) document.getElementById(streetId).value = data.logradouro || '';
+            if(document.getElementById(neighborhoodId)) document.getElementById(neighborhoodId).value = data.bairro || '';
+            if(document.getElementById(cityId)) document.getElementById(cityId).value = `${data.localidade || ''} - ${data.uf || ''}`;
+          }
+        } catch (error) { console.error("Erro CEP", error); }
+      }
+    }
+    
+    function getLocationGPS() {
+        setTimeout(() => {
+            document.getElementById('newLocationInput').value = "Pouso Alegre, MG (GPS)";
+            showToast("Localização obtida!");
+        }, 800);
+    }
+
+    /* CARREGAMENTO DE CONTA E FORMULÁRIO DO PRO CONECTADO */
+    function generateUserReferralCode(user) {
+      if (user.referralCode) return user.referralCode;
+      const base = (user.name || 'PRO').replace(/[^a-zA-Z]/g, '').toUpperCase().slice(0, 6) || 'PRO';
+      const suffix = String(user.phone || '10').replace(/\D/g, '').slice(-2) || '10';
+      return `RESOLVE-${base}${suffix}`;
+    }
+
+    function copyMyReferralCode() {
+      const code = document.getElementById('myReferralCodeText').innerText.trim();
+      const btn = document.getElementById('btnCopyRefCode');
+      const orig = btn.innerHTML;
+      navigator.clipboard.writeText(code).catch(() => {});
+      btn.innerHTML = '<i class="fa-solid fa-check"></i> Copiado!';
+      btn.style.background = '#ECFDF5';
+      btn.style.color = 'var(--success)';
+      showToast("Código de indicação copiado!");
+      setTimeout(() => {
+        btn.innerHTML = orig;
+        btn.style.background = '';
+        btn.style.color = '';
+      }, 2500);
+    }
+
+    function shareReferralOnWhatsApp() {
+      const code = document.getElementById('myReferralCodeText').innerText.trim();
+      const msg = encodeURIComponent(`Fala colega! Estou anunciando meus serviços no app ResolveAí e recebendo orçamentos direto no WhatsApp. Use meu código ${code} no cadastro Pro para ganhar 10% de desconto na assinatura!`);
+      window.open(`https://wa.me/?text=${msg}`);
+    }
+
+    function handleAccountClick() {
+      const user = JSON.parse(localStorage.getItem('resolveAi_user'));
+      if (user) {
+        document.getElementById('profName').value = user.name || '';
+        document.getElementById('profEmail').value = user.email || '';
+        document.getElementById('profPhone').value = user.phone || '';
+        document.getElementById('profCep').value = user.cep || '';
+        document.getElementById('profCity').value = user.city || user.address || '';
+        document.getElementById('profNeighborhood').value = user.neighborhood || '';
+        
+        if (user.avatar) {
+          document.getElementById('profileAvatarImg').src = user.avatar;
+        } else {
+          document.getElementById('profileAvatarImg').src = `https://ui-avatars.com/api/?name=${user.name || 'User'}&background=0F172A&color=fff`;
+        }
+
+        // Atualiza e exibe o código de Indicação / Afiliados
+        user.referralCode = generateUserReferralCode(user);
+        localStorage.setItem('resolveAi_user', JSON.stringify(user));
+        document.getElementById('myReferralCodeText').innerText = user.referralCode;
+        
+        const allReferrals = JSON.parse(localStorage.getItem('resolveAi_referrals')) || {};
+        const myRefStats = allReferrals[user.referralCode] || { count: user.referralsCount || 0, bonusDays: user.bonusDays || 0 };
+        document.getElementById('refCountText').innerText = myRefStats.count;
+        document.getElementById('refBonusDaysText').innerText = `+${myRefStats.bonusDays} dias`;
+
+        // Se o utilizador tiver assinatura Pró ativa, exibe o painel de status e edição do negócio
+        const proCard = document.getElementById('userProStatusCard');
+        const proSection = document.getElementById('proAccountSection');
+        
+        if (user.isPro) {
+          proCard.style.display = 'flex';
+          proSection.style.display = 'block';
+          const baseDays = user.proPlan === 'annual' ? 365 : 30;
+          const totalDays = baseDays + (myRefStats.bonusDays || 0);
+          const periodLabel = user.proPlan === 'annual' ? 'Plano Anual Ativo' : 'Plano Mensal Ativo';
+          document.getElementById('userProStatusExpiry').innerText = `${periodLabel} • Vence em ${totalDays} dias`;
+
+          // Encontra o prestador correspondente na lista para preencher os campos
+          const savedProviders = JSON.parse(localStorage.getItem('resolveAi_providers')) || [];
+          const myPro = savedProviders.find(p => p.id === user.proId || p.ownerEmail === user.email);
+          if (myPro) {
+            document.getElementById('accProBusinessName').value = myPro.name || '';
+            document.getElementById('accProWhatsapp').value = myPro.phone || '';
+            document.getElementById('accProCategory').value = myPro.category || 'pedreiro';
+            document.getElementById('accProPrice').value = myPro.price || '';
+            document.getElementById('accProBio').value = myPro.bio || '';
+          }
+        } else {
+          proCard.style.display = 'none';
+          proSection.style.display = 'none';
+        }
+
+        updateProfileFavList();
+        document.getElementById('profileModal').classList.add('show');
+      } else {
+        openAuth('login');
+      }
+    }
+    
+    function updateProfileFavList() {
+        const ph = document.getElementById('favListPlaceholder');
+        const cont = document.getElementById('favListContainer');
+        if(userFavorites.length === 0) {
+            ph.style.display = 'block'; cont.style.display = 'none';
+        } else {
+            ph.style.display = 'none'; cont.style.display = 'flex';
+            const favProviders = providers.filter(p => userFavorites.includes(p.id));
+            cont.innerHTML = favProviders.map(p => `
+                <div style="display:flex; align-items:center; gap:10px; background:var(--input-bg); padding:10px; border-radius:12px; border:1px solid var(--border); cursor:pointer;" onclick="openProDetails(${p.id})">
+                    <img src="${p.avatar}" style="width:45px; height:45px; border-radius:10px; object-fit:cover;">
+                    <div style="flex:1;">
+                        <div style="font-size:13px; font-weight:700; color:var(--text);">${p.name}</div>
+                        <div style="font-size:11px; color:var(--muted);">${p.categoryLabel}</div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right" style="color:var(--primary); font-size:12px;"></i>
+                </div>
+            `).join('');
+        }
+    }
+
+    function openAuth(mode) {
+      const modal = document.getElementById('authModal');
+      document.getElementById('authTitle').innerText = mode === 'register' ? 'Criar Conta' : 'Acessar Conta';
+      const isRegister = mode === 'register';
+      document.getElementById('registerExtraFields').style.display = isRegister ? 'block' : 'none';
+      document.getElementById('loginEmailLabel').innerText = isRegister ? 'E-mail' : 'E-mail ou Telefone';
+      document.getElementById('authSubmitBtn').innerText = isRegister ? 'Cadastrar' : 'Entrar';
+      
+      const bioContainer = document.getElementById('biometricLoginContainer');
+      if (bioContainer) {
+        bioContainer.style.display = isRegister ? 'none' : 'block';
+      }
+      
+      // Pré-preenche se já houver login salvo para facilitar
+      const savedUser = JSON.parse(localStorage.getItem('resolveAi_user'));
+      if (!isRegister && savedUser && savedUser.loginInput) {
+        document.getElementById('userEmail').value = savedUser.loginInput;
+      }
+      modal.classList.add('show');
+    }
+
+    function closeAuth() { document.getElementById('authModal').classList.remove('show'); resetBottomNav(); }
+    function closeProfileModal() { document.getElementById('profileModal').classList.remove('show'); resetBottomNav(); }
+
+    function handleAuth(e) {
+      e.preventDefault();
+      const loginVal = document.getElementById('userEmail').value.trim();
+      const passVal = document.getElementById('userPass').value.trim();
+      const isRegistering = document.getElementById('registerExtraFields').style.display === 'block';
+
+      // Validação de E-mail ou Telefone (com DDD)
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      const cleanPhone = loginVal.replace(/\D/g, '');
+      const isPhone = cleanPhone.length >= 10 && cleanPhone.length <= 11;
+      const isEmail = emailRegex.test(loginVal);
+
+      if (!isEmail && !isPhone) {
+        showToast("Insira um e-mail válido ou telefone com DDD!", true);
+        document.getElementById('userEmail').focus();
+        return;
+      }
+
+      // Validação da Senha (mínimo de 6 dígitos)
+      if (passVal.length < 6) {
+        showToast("A senha deve conter pelo menos 6 caracteres!", true);
+        document.getElementById('userPass').focus();
+        return;
+      }
+
+      // Se logou com telefone, formata o telefone e NÃO joga dígitos puros no campo de e-mail
+      let formattedPhone = "";
+      if (isPhone) {
+        formattedPhone = cleanPhone.length === 11 
+          ? cleanPhone.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3')
+          : cleanPhone.replace(/^(\d{2})(\d{4})(\d{4})$/, '($1) $2-$3');
+      }
+
+      let name = isEmail ? loginVal.split('@')[0] : "Cliente ResolveAí";
+      let email = isEmail ? loginVal : "";
+      let phone = isPhone ? formattedPhone : "";
+      let address = "Pouso Alegre, MG"; 
+      let cep = "", city = "", neighborhood = "";
+
+      if (isRegistering) {
+        const nameVal = document.getElementById('userName').value.trim();
+        if (nameVal.length < 3) {
+          showToast("Digite seu nome completo (mínimo 3 letras)!", true);
+          document.getElementById('userName').focus();
+          return;
+        }
+        name = nameVal;
+        phone = document.getElementById('userPhoneReg').value;
+        cep = document.getElementById('userCep').value;
+        city = document.getElementById('userCity').value;
+        neighborhood = document.getElementById('userNeighborhood').value;
+        if (city) address = city;
+        else if (neighborhood) address = neighborhood;
+      }
+
+      // Verifica se o usuário já tem registro pro gravado previamente
+      const savedProviders = JSON.parse(localStorage.getItem('resolveAi_providers')) || [];
+      const foundPro = savedProviders.find(p => (isEmail && p.ownerEmail === loginVal) || (isPhone && p.phone === cleanPhone));
+
+      const userData = { 
+        name, 
+        email, 
+        loginInput: loginVal,
+        address, 
+        phone: phone || (foundPro ? foundPro.phone : ""), 
+        cep, 
+        city, 
+        neighborhood, 
+        favorites: [], 
+        isPro: foundPro ? true : false,
+        proId: foundPro ? foundPro.id : null,
+        proPlan: foundPro ? foundPro.proPlan : 'monthly',
+        darkMode: document.body.getAttribute('data-theme') === 'dark' 
+      };
+      
+      localStorage.setItem('resolveAi_user', JSON.stringify(userData));
+      userFavorites = [];
+      closeAuth();
+      showMainApp(name, address);
+      showToast(`Bem-vindo, ${name}!`);
+    }
+
+    /* === LOGIN COM BIOMETRIA / FACE ID (ENCENAÇÃO REALISTA) === */
+    let bioTimer = null;
+    function startBiometricLogin() {
+      const overlay = document.getElementById('biometricOverlay');
+      const iconWrap = document.getElementById('bioIconWrapper');
+      const icon = document.getElementById('bioIcon');
+      const title = document.getElementById('bioTitle');
+      const desc = document.getElementById('bioDesc');
+
+      // Reseta visual para modo de escaneamento
+      iconWrap.className = 'biometric-icon-wrapper scanning';
+      icon.className = 'fa-solid fa-fingerprint';
+      title.innerText = 'Escaneando Biometria...';
+      desc.innerText = 'Posicione o dedo no sensor ou olhe para a tela';
+      overlay.classList.add('show');
+
+      // Simula leitura biométrica rápida (1.2 segundos)
+      bioTimer = setTimeout(() => {
+        iconWrap.className = 'biometric-icon-wrapper success';
+        icon.className = 'fa-solid fa-check';
+        title.innerText = 'Biometria Reconhecida!';
+        desc.innerText = 'Acesso liberado com sucesso!';
+
+        if (navigator.vibrate) {
+          navigator.vibrate([80, 50, 80]); // Vibração haptica se suportada no celular
+        }
+
+        setTimeout(() => {
+          overlay.classList.remove('show');
+          closeAuth();
+
+          // Carrega último usuário ou cria sessão biométrica instantânea
+          let savedUser = JSON.parse(localStorage.getItem('resolveAi_user'));
+          if (!savedUser) {
+            savedUser = {
+              name: "Usuário Biometria",
+              email: "usuario@resolveai.com.br",
+              phone: "(35) 99876-5432",
+              address: "Pouso Alegre, MG",
+              favorites: [],
+              isPro: false,
+              darkMode: document.body.getAttribute('data-theme') === 'dark'
+            };
+            localStorage.setItem('resolveAi_user', JSON.stringify(savedUser));
+          }
+
+          showMainApp(savedUser.name, savedUser.address);
+          showToast(`Autenticado com Biometria! Olá, ${savedUser.name}!`);
+        }, 700);
+      }, 1200);
+    }
+
+    function cancelBiometric() {
+      if (bioTimer) clearTimeout(bioTimer);
+      document.getElementById('biometricOverlay').classList.remove('show');
+    }
+
+    /* COMPRESSÃO E REDIMENSIONAMENTO DE IMAGEM COM CANVAS (NUNCA ESTOURA LOCALSTORAGE) */
+    function compressAndUpload(event, targetImgId) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 300;
+          let w = img.width;
+          let h = img.height;
+
+          if (w > h) {
+            if (w > maxDim) {
+              h = Math.round(h * (maxDim / w));
+              w = maxDim;
+            }
+          } else {
+            if (h > maxDim) {
+              w = Math.round(w * (maxDim / h));
+              h = maxDim;
+            }
+          }
+
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          const compressedDataUrl = canvas.toDataURL('image/jpeg', 0.75);
+          document.getElementById(targetImgId).src = compressedDataUrl;
+          showToast("Foto comprimida e carregada com sucesso!");
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    /* SALVAR ALTERAÇÕES DO PERFIL + SINCRONIZAÇÃO COM A VITRINE PRO */
+    function saveProfile(e) {
+      e.preventDefault();
+      let user = JSON.parse(localStorage.getItem('resolveAi_user')) || {};
+      user.name = document.getElementById('profName').value;
+      user.email = document.getElementById('profEmail').value;
+      user.phone = document.getElementById('profPhone').value;
+      user.cep = document.getElementById('profCep').value;
+      user.city = document.getElementById('profCity').value;
+      user.neighborhood = document.getElementById('profNeighborhood').value;
+      user.avatar = document.getElementById('profileAvatarImg').src;
+      user.address = user.city || user.neighborhood || "Pouso Alegre, MG";
+
+      // SE O USUÁRIO FOR PRO, ATUALIZA DIRETAMENTE SEUS DADOS NA LISTA DE PRESTADORES!
+      if (user.isPro && user.proId) {
+        let savedProviders = JSON.parse(localStorage.getItem('resolveAi_providers')) || [];
+        const proIdx = savedProviders.findIndex(p => p.id === user.proId);
+        
+        if (proIdx !== -1) {
+          const catSelect = document.getElementById('accProCategory');
+          savedProviders[proIdx].name = document.getElementById('accProBusinessName').value || user.name;
+          savedProviders[proIdx].phone = document.getElementById('accProWhatsapp').value.replace(/\D/g, '') || user.phone;
+          savedProviders[proIdx].category = catSelect.value;
+          savedProviders[proIdx].categoryLabel = catSelect.options[catSelect.selectedIndex].text;
+          savedProviders[proIdx].price = document.getElementById('accProPrice').value;
+          savedProviders[proIdx].bio = document.getElementById('accProBio').value;
+          savedProviders[proIdx].avatar = user.avatar;
+
+          localStorage.setItem('resolveAi_providers', JSON.stringify(savedProviders));
+          
+          const pIndex = providers.findIndex(p => p.id === user.proId);
+          if (pIndex !== -1) {
+            providers[pIndex] = savedProviders[proIdx];
+          }
+        }
+      }
+
+      localStorage.setItem('resolveAi_user', JSON.stringify(user));
+      closeProfileModal();
+      showMainApp(user.name, user.address);
+      renderProviders();
+      showToast("Perfil atualizado e publicado na vitrine!");
+    }
+
+    function showMainApp(userName, userAddress) {
+      document.getElementById('splashScreen').classList.add('hide'); 
+      document.getElementById('welcomeText').innerText = `Olá, ${userName}!`;
+      if (userAddress) document.getElementById('userLocationText').innerText = userAddress;
+      resetBottomNav();
+    }
+
+    function logout() {
+      localStorage.removeItem('resolveAi_user');
+      userFavorites = [];
+      document.getElementById('splashScreen').classList.remove('hide');
+      document.getElementById('userLocationText').innerText = "Pouso Alegre, MG";
+      document.getElementById('profileModal').classList.remove('show');
+      renderProviders(); 
+      showToast("Sessão terminada");
+    }
+
+    function openLocationModal() {
+      const modal = document.getElementById('locationModal');
+      const currentUser = JSON.parse(localStorage.getItem('resolveAi_user'));
+      document.getElementById('newLocationInput').value = currentUser?.address || document.getElementById('userLocationText').innerText;
+      modal.classList.add('show');
+    }
+    function closeLocationModal() { document.getElementById('locationModal').classList.remove('show'); }
+
+    function saveNewLocation() {
+      const newLoc = document.getElementById('newLocationInput').value;
+      if (newLoc.trim() !== '') {
+        let currentUser = JSON.parse(localStorage.getItem('resolveAi_user')) || {};
+        currentUser.address = newLoc;
+        localStorage.setItem('resolveAi_user', JSON.stringify(currentUser));
+        document.getElementById('userLocationText').innerText = newLoc;
+        showToast("Localização alterada");
+      }
+      closeLocationModal();
+    }
+
+    function openProModal() { document.getElementById('proModal').classList.add('show'); }
+    function closeProModal() { document.getElementById('proModal').classList.remove('show'); resetBottomNav(); }
+
+    function maskCPF(i) {
+      let v = i.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d)/, '$1.$2');
+      v = v.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+      i.value = v;
+    }
+
+    /* VALIDAÇÃO MATEMÁTICA REAL DE CPF */
+    function isValidCPF(cpf) {
+      cpf = cpf.replace(/\D/g, '');
+      if (cpf.length !== 11 || /^(\d)\1{10}$/.test(cpf)) return false;
+      let sum = 0, rest;
+      for (let i = 1; i <= 9; i++) sum += parseInt(cpf.substring(i - 1, i)) * (11 - i);
+      rest = (sum * 10) % 11;
+      if (rest === 10 || rest === 11) rest = 0;
+      if (rest !== parseInt(cpf.substring(9, 10))) return false;
+      sum = 0;
+      for (let i = 1; i <= 10; i++) sum += parseInt(cpf.substring(i - 1, i)) * (12 - i);
+      rest = (sum * 10) % 11;
+      if (rest === 10 || rest === 11) rest = 0;
+      if (rest !== parseInt(cpf.substring(10, 11))) return false;
+      return true;
+    }
+
+    function maskPhone(i) {
+      let v = i.value.replace(/\D/g, '');
+      if (v.length > 11) v = v.slice(0, 11);
+      v = v.replace(/^(\d{2})(\d)/g, '($1) $2');
+      v = v.replace(/(\d{5})(\d)/, '$1-$2');
+      i.value = v;
+    }
+
+    /* SELEÇÃO DO PERÍODO DO PLANO (MENSAL OU ANUAL) + CUPOM DE INDICAÇÃO */
+    function updateCheckoutPriceLabels() {
+      const btnText = document.getElementById('btnSubmitProText');
+      const modalPrice = document.getElementById('pixModalPriceDisplay');
+
+      if (selectedPlanPeriod === 'annual') {
+        if (couponApplied) {
+          btnText.innerText = "ATIVAR PLANO ANUAL COM 10% OFF (R$ 224,10)";
+          modalPrice.innerHTML = 'R$ 224,10 <span style="font-size:12px; font-weight:600; color:var(--success)">/ ano (Cupom 10% OFF)</span>';
+        } else {
+          btnText.innerText = "ATIVAR PLANO ANUAL (R$ 249,00 / ANO)";
+          modalPrice.innerHTML = 'R$ 249,00 <span style="font-size:12px; font-weight:600; color:var(--muted)">/ ano (Economize 30%)</span>';
+        }
+      } else {
+        if (couponApplied) {
+          btnText.innerText = "ATIVAR COM 10% DE DESCONTO (R$ 26,90)";
+          modalPrice.innerHTML = 'R$ 26,90 <span style="font-size:12px; font-weight:600; color:var(--success)">/ 1º mês (Cupom 10% OFF)</span>';
+        } else {
+          btnText.innerText = "ATIVAR MEU PERFIL E COMEÇAR A RECEBER CLIENTES";
+          modalPrice.innerHTML = 'R$ 29,90 <span style="font-size:12px; font-weight:600; color:var(--muted)">/ mês</span>';
+        }
+      }
+    }
+
+    function selectPlanPeriod(period) {
+      selectedPlanPeriod = period;
+      document.getElementById('planMonthlyCard').classList.toggle('active', period === 'monthly');
+      document.getElementById('planAnnualCard').classList.toggle('active', period === 'annual');
+      updateCheckoutPriceLabels();
+    }
+
+    function applyReferralCoupon() {
+      const input = document.getElementById('referralCouponInput');
+      const code = input.value.trim().toUpperCase();
+      if (code.length < 4) {
+        showToast("Digite um código de indicação válido!", true);
+        return;
+      }
+      couponApplied = true;
+      appliedCouponCode = code;
+      document.getElementById('couponFeedbackMsg').style.display = 'block';
+      document.getElementById('btnApplyCoupon').innerText = 'Ativado ✓';
+      document.getElementById('btnApplyCoupon').style.background = 'var(--success)';
+      updateCheckoutPriceLabels();
+      showToast("Cupom aplicado! Você ganhou 10% de desconto!");
+    }
+
+    /* FORMA DE PAGAMENTO PRO */
+    function selectPaymentMethod(method) {
+      selectedPayMethod = method;
+      document.getElementById('optPix').classList.toggle('selected', method === 'pix');
+      document.getElementById('optCard').classList.toggle('selected', method === 'card');
+    }
+
+    /* GATEWAY DE PAGAMENTO: OBRIGATÓRIO PARA QUEM QUER APARECER NO APP */
+    function handleProRegistration(e) {
+      e.preventDefault();
+
+      // Validação de CPF real
+      const cpfInput = document.getElementById('proCpf').value;
+      if (!isValidCPF(cpfInput)) {
+        showToast("CPF inválido! Verifique os dígitos.", true);
+        document.getElementById('proCpf').focus();
+        return;
+      }
+
+      const categorySelect = document.getElementById('proCategory');
+      const city = document.getElementById('proCity').value;
+      const neighborhood = document.getElementById('proNeighborhood').value;
+      let locationStr = city ? `${neighborhood} - ${city.split('-')[0].trim()}` : "0.1 km";
+      const user = JSON.parse(localStorage.getItem('resolveAi_user')) || {};
+
+      pendingProData = {
+        id: Date.now(),
+        name: document.getElementById('proBusiness').value,
+        category: categorySelect.value,
+        categoryLabel: categorySelect.options[categorySelect.selectedIndex].text,
+        rating: 5.0,
+        contactsCount: 0,
+        distance: locationStr,
+        verified: true,
+        phone: document.getElementById('proWhatsapp').value.replace(/\D/g, ''),
+        avatar: document.getElementById('proAvatarImg').src,
+        price: document.getElementById('proPriceInput').value || "Sob Consulta",
+        bio: document.getElementById('proBio').value,
+        ownerEmail: user.email || '',
+        proPlan: selectedPlanPeriod,
+        usedReferralCode: couponApplied ? appliedCouponCode : null,
+        reviews: []
+      };
+
+      if (selectedPayMethod === 'card') {
+        showToast("Processando pagamento no cartão...");
+        setTimeout(() => {
+          confirmPaymentAndFinish();
+        }, 1200);
+      } else {
+        document.getElementById('pixCheckoutModal').classList.add('show');
+      }
+    }
+
+    function closePixModal() {
+      document.getElementById('pixCheckoutModal').classList.remove('show');
+    }
+
+    /* FEEDBACK VISUAL NO BOTÃO DE COPIAR PIX */
+    function copyPixCode() {
+      const code = document.getElementById('pixCopiaColaCode').innerText.trim();
+      const btn = document.getElementById('btnCopyPix');
+      const originalHTML = btn.innerHTML;
+
+      navigator.clipboard.writeText(code).then(() => {
+        btn.innerHTML = '<i class="fa-solid fa-check" style="color:var(--success);"></i> Copiado! ✓';
+        btn.style.borderColor = 'var(--success)';
+        showToast("Código PIX copiado!");
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+          btn.style.borderColor = '';
+        }, 2500);
+      }).catch(() => {
+        btn.innerHTML = '<i class="fa-solid fa-check" style="color:var(--success);"></i> Copiado! ✓';
+        showToast("Código PIX copiado!");
+        setTimeout(() => {
+          btn.innerHTML = originalHTML;
+        }, 2500);
+      });
+    }
+
+    function confirmPaymentAndFinish() {
+      if (!pendingProData) return;
+
+      const savedProviders = JSON.parse(localStorage.getItem('resolveAi_providers')) || [];
+      savedProviders.unshift(pendingProData);
+      localStorage.setItem('resolveAi_providers', JSON.stringify(savedProviders));
+
+      // Se utilizou um código de indicação, credita +30 dias grátis para o padrinho!
+      if (pendingProData.usedReferralCode) {
+        const refCode = pendingProData.usedReferralCode;
+        let allReferrals = JSON.parse(localStorage.getItem('resolveAi_referrals')) || {};
+        if (!allReferrals[refCode]) {
+          allReferrals[refCode] = { count: 0, bonusDays: 0 };
+        }
+        allReferrals[refCode].count += 1;
+        allReferrals[refCode].bonusDays += 30;
+        localStorage.setItem('resolveAi_referrals', JSON.stringify(allReferrals));
+      }
+      
+      // Conecta o prestador à conta do usuário logado
+      let user = JSON.parse(localStorage.getItem('resolveAi_user'));
+      if (user) {
+        user.isPro = true;
+        user.proId = pendingProData.id;
+        user.proPlan = pendingProData.proPlan;
+        localStorage.setItem('resolveAi_user', JSON.stringify(user));
+      }
+
+      providers.unshift(pendingProData);
+      renderProviders();
+
+      closePixModal();
+      closeProModal();
+      const planMsg = pendingProData.usedReferralCode 
+        ? 'Assinatura ativa + 30 dias creditados ao colega que indicou!' 
+        : (pendingProData.proPlan === 'annual' ? 'Plano Anual ativado!' : 'Plano Mensal ativado!');
+      showToast(`Pagamento aprovado! ${planMsg}`);
+      
+      // Reseta estado do formulário e cupom
+      document.getElementById('proForm').reset();
+      couponApplied = false;
+      appliedCouponCode = '';
+      document.getElementById('couponFeedbackMsg').style.display = 'none';
+      document.getElementById('btnApplyCoupon').innerText = 'Aplicar';
+      document.getElementById('btnApplyCoupon').style.background = '';
+      updateCheckoutPriceLabels();
+      pendingProData = null;
+    }
+    
+    /* PERFIL DETALHADO + AVALIAÇÕES */
+    function openProDetails(id) {
+        const pro = providers.find(p => p.id === id);
+        if(!pro) return;
+        currentViewedPro = pro;
+        
+        document.getElementById('detAvatar').src = pro.avatar;
+        document.getElementById('detName').innerText = pro.name;
+        document.getElementById('detCat').innerText = pro.categoryLabel;
+        document.getElementById('detDist').innerText = pro.distance;
+        document.getElementById('detRating').innerText = pro.rating.toFixed(1);
+        document.getElementById('detAttendances').innerText = `+${pro.contactsCount || 0}`;
+        document.getElementById('detPrice').innerText = pro.price || "Sob Consulta";
+        document.getElementById('detBio').innerText = pro.bio || "Profissional qualificado pronto para resolver o seu problema.";
+        
+        const favBtn = document.getElementById('detFavBtn');
+        favBtn.innerHTML = userFavorites.includes(pro.id) ? '<i class="fa-solid fa-heart" style="color:#EF4444;"></i>' : '<i class="fa-regular fa-heart"></i>';
+        
+        document.getElementById('detZapBtn').onclick = () => openWhatsAppPro(pro.id, pro.phone, pro.name, pro.categoryLabel);
+        
+        renderReviewsList(pro);
+        setRatingScore(5);
+        document.getElementById('proDetailsModal').classList.add('show');
+    }
+    
+    function closeProDetails() { document.getElementById('proDetailsModal').classList.remove('show'); renderProviders(); }
+    
+    function toggleFavFromDetails(btn) {
+        if(!currentViewedPro) return;
+        toggleFavorite(currentViewedPro.id, btn);
+        const favBtn = document.getElementById('detFavBtn');
+        favBtn.innerHTML = userFavorites.includes(currentViewedPro.id) ? '<i class="fa-solid fa-heart" style="color:#EF4444;"></i>' : '<i class="fa-regular fa-heart"></i>';
+    }
+
+    function setRatingScore(score) {
+        selectedRatingScore = score;
+        const stars = document.querySelectorAll('#starPicker i');
+        stars.forEach((star, idx) => {
+            if(idx < score) star.classList.add('selected');
+            else star.classList.remove('selected');
+        });
+    }
+
+    function renderReviewsList(pro) {
+        const container = document.getElementById('reviewsContainer');
+        if(!pro.reviews || pro.reviews.length === 0) {
+            container.innerHTML = `<div style="font-size:12px; color:var(--muted); font-style:italic;">Ainda não existem avaliações. Seja o primeiro a avaliar!</div>`;
+            return;
+        }
+        container.innerHTML = pro.reviews.map(r => `
+            <div class="review-card">
+                <div class="review-header">
+                    <span>${r.author}</span>
+                    <span class="review-stars">${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}</span>
+                </div>
+                <div class="review-text">${r.text}</div>
+            </div>
+        `).join('');
+    }
+
+    function submitReview() {
+        const comment = document.getElementById('reviewCommentInput').value.trim();
+        const user = JSON.parse(localStorage.getItem('resolveAi_user'));
+        
+        if(!user) {
+            showToast("Faça login para avaliar", true);
+            openAuth('login');
+            return;
+        }
+        if(!comment) {
+            showToast("Escreva um comentário", true);
+            return;
+        }
+
+        if(!currentViewedPro.reviews) currentViewedPro.reviews = [];
+        
+        currentViewedPro.reviews.unshift({
+            author: user.name || "Utilizador",
+            stars: selectedRatingScore,
+            text: comment
+        });
+
+        calcRating(currentViewedPro);
+
+        let allReviews = JSON.parse(localStorage.getItem('resolveAi_reviews')) || {};
+        allReviews[currentViewedPro.id] = currentViewedPro.reviews;
+        localStorage.setItem('resolveAi_reviews', JSON.stringify(allReviews));
+
+        document.getElementById('detRating').innerText = currentViewedPro.rating.toFixed(1);
+        renderReviewsList(currentViewedPro);
+        document.getElementById('reviewCommentInput').value = '';
+        showToast("Avaliação enviada!");
+        renderProviders();
+    }
+
+    function calcRating(pro) {
+        if(!pro.reviews || pro.reviews.length === 0) return;
+        const sum = pro.reviews.reduce((acc, r) => acc + r.stars, 0);
+        pro.rating = sum / pro.reviews.length;
+    }
+  </script>
+</body>
+</html>
